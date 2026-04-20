@@ -38,7 +38,20 @@ export default function K3sSection({ nodes, k3s, pod: initialPod, onRefresh }: P
 
       {/* Cluster diagram */}
       <div className="border border-gray-200 dark:border-gray-800 rounded-xl p-5 bg-white dark:bg-gray-900">
-        <div className="text-xs font-mono text-gray-400 dark:text-gray-500 mb-5">k3s cluster</div>
+        <div className="flex items-center justify-between mb-5">
+          <span className="text-xs font-mono text-gray-400 dark:text-gray-500">k3s cluster</span>
+          <button
+            onClick={rotatePod}
+            disabled={spinning}
+            title="Re-route to a different pod"
+            className="rounded-full border border-gray-200 dark:border-gray-800 p-1.5 text-gray-400 hover:border-gray-400 dark:hover:border-gray-600 hover:text-blue-500 dark:hover:text-blue-400 disabled:opacity-40 transition-colors"
+          >
+            <svg className={`w-3 h-3 ${spinning ? 'animate-spin' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 12a9 9 0 1 1-9-9c2.52 0 4.93 1 6.74 2.74L21 8" />
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 3v5h-5" />
+            </svg>
+          </button>
+        </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
           {CLUSTER_NODES.map(n => (
@@ -52,31 +65,6 @@ export default function K3sSection({ nodes, k3s, pod: initialPod, onRefresh }: P
             />
           ))}
         </div>
-
-        {/* Pod badge — only shown on k3s where NODE_NAME is set */}
-        {pod?.node && (
-          <div className="mt-4 pt-4 border-t border-gray-100 dark:border-gray-800 flex flex-col items-start gap-1.5">
-            <span className="text-xs text-gray-400 dark:text-gray-600">Served by Kubernetes pod</span>
-            <div className="flex items-center gap-2">
-              <span className="inline-flex items-center gap-1.5 rounded-full border border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-gray-950 px-3 py-1 text-xs font-mono text-gray-500 dark:text-gray-400">
-                <span className={`h-1.5 w-1.5 rounded-full flex-shrink-0 ${spinning ? 'bg-yellow-400 animate-pulse' : 'bg-green-400'}`} />
-                {pod.hostname}
-              </span>
-              <button
-                onClick={rotatePod}
-                disabled={spinning}
-                title="Re-route to a different pod"
-                className="rounded-full border border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-gray-950 p-1.5 text-gray-400 hover:border-gray-400 dark:hover:border-gray-600 hover:text-gray-600 dark:hover:text-gray-300 disabled:opacity-40 transition-colors"
-              >
-                <svg className={`w-3 h-3 ${spinning ? 'animate-spin' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 12a9 9 0 1 1-9-9c2.52 0 4.93 1 6.74 2.74L21 8" />
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 3v5h-5" />
-                </svg>
-              </button>
-            </div>
-            <span className="text-xs text-gray-300 dark:text-gray-700 font-mono">{"{ deployment }-{ replicaset-hash }-{ pod-hash }"}</span>
-          </div>
-        )}
       </div>
 
       {/* Pod stats */}

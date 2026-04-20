@@ -4,7 +4,7 @@ metadata:
   name: homelab-frontend
   namespace: homelab-dashboard
 spec:
-  replicas: 1
+  replicas: 3
   selector:
     matchLabels:
       app: homelab-frontend
@@ -18,6 +18,11 @@ spec:
           image: jeanmichelbb/homelab-fe:latest
           ports:
             - containerPort: 80
+          env:
+            - name: NODE_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: spec.nodeName
 ---
 apiVersion: v1
 kind: Service

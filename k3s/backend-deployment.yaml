@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: homelab-backend
+  namespace: homelab-dashboard
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: homelab-backend
+  template:
+    metadata:
+      labels:
+        app: homelab-backend
+    spec:
+      containers:
+        - name: backend
+          image: jeanmichelbb/homelab-be:latest
+          ports:
+            - containerPort: 8000
+          envFrom:
+            - configMapRef:
+                name: homelab-backend-config
+            - secretRef:
+                name: homelab-backend-secrets
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: homelab-backend
+  namespace: homelab-dashboard
+spec:
+  selector:
+    app: homelab-backend
+  ports:
+    - port: 8000
+      targetPort: 8000

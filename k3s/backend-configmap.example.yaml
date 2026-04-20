@@ -1,0 +1,28 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: homelab-backend-config
+  namespace: homelab-dashboard
+data:
+  REDIS_URL: "redis://homelab-redis:6379"
+  PROMETHEUS_URL: "http://<tspi-tailscale-ip>:9090"
+  GLANCES_ELITEDESK_URL: "http://<elitedesk-tailscale-ip>:61208"
+  GLANCES_TSPI_URL: "http://<tspi-tailscale-ip>:61208"
+  GLANCES_WIN_URL: "http://<windows-tailscale-ip>:9091"
+  TRUENAS_URL: "http://<truenas-tailscale-ip>"
+  SONARR_URL: "http://<elitedesk-tailscale-ip>:8989"
+  RADARR_URL: "http://<elitedesk-tailscale-ip>:7878"
+  PROWLARR_URL: "http://<elitedesk-tailscale-ip>:9696"
+  QBITTORRENT_URL: "http://<elitedesk-tailscale-ip>:8085"
+  JELLYFIN_URL: "http://<elitedesk-tailscale-ip>:8096"
+  PORTAINER_URL: "http://<elitedesk-tailscale-ip>:9000"
+  GRAFANA_URL: "http://<tspi-tailscale-ip>:3000"
+  GPUPROXY_URL: "http://<elitedesk-tailscale-ip>:11435"
+  GLUETUN_URL: "http://<elitedesk-tailscale-ip>:8000"
+  K3S_URL: "https://<elitedesk-tailscale-ip>:6443"
+  TAILSCALE_IP_ELITEDESK: "<elitedesk-tailscale-ip>"
+  TAILSCALE_IP_TSPI: "<tspi-tailscale-ip>"
+  TAILSCALE_IP_WINDOWS: "<windows-tailscale-ip>"
+  TAILSCALE_IP_TRUENAS: "<truenas-tailscale-ip>"
+  TAILSCALE_IP_OCI1: "<oci-node-1-tailscale-ip>"
+  TAILSCALE_IP_OCI2: "<oci-node-2-tailscale-ip>"

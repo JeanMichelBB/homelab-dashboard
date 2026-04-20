@@ -1,0 +1,37 @@
+services:
+  frontend:
+    build:
+      context: ./frontend
+    ports:
+      - "3000:80"
+    depends_on:
+      - backend
+
+  backend:
+    build:
+      context: ./backend
+    ports:
+      - "8000:8000"
+    environment:
+      - REDIS_URL=redis://redis:6379
+      - PROMETHEUS_URL=${PROMETHEUS_URL}
+      - GLANCES_ELITEDESK_URL=${GLANCES_ELITEDESK_URL}
+      - GLANCES_TSPI_URL=${GLANCES_TSPI_URL}
+      - GLANCES_WIN_URL=${GLANCES_WIN_URL}
+      - TRUENAS_URL=${TRUENAS_URL}
+      - TRUENAS_API_KEY=${TRUENAS_API_KEY}
+      - SONARR_URL=${SONARR_URL}
+      - SONARR_API_KEY=${SONARR_API_KEY}
+      - RADARR_URL=${RADARR_URL}
+      - RADARR_API_KEY=${RADARR_API_KEY}
+      - GPUPROXY_URL=${GPUPROXY_URL}
+      - GLUETUN_URL=${GLUETUN_URL}
+      - K3S_URL=${K3S_URL}
+      - K3S_BEARER_TOKEN=${K3S_BEARER_TOKEN}
+    depends_on:
+      - redis
+
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"

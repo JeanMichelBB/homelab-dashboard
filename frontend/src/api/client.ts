@@ -1,4 +1,4 @@
-import type { Node, Service, MonitoringData, MediaData, StorageData, GpuData, NetworkData, K3sData } from '../types'
+import type { Node, Service, MonitoringData, MediaData, StorageData, GpuData, NetworkData, K3sData, PodInfo } from '../types/index'
 
 const BASE = import.meta.env.VITE_API_URL ?? '/api'
 
@@ -17,4 +17,5 @@ export const api = {
   gpu: () => get<GpuData>('/gpu'),
   network: () => get<NetworkData>('/network'),
   k3s: () => get<K3sData>('/k3s'),
+  pod: () => get<PodInfo>('/pod'),
 }

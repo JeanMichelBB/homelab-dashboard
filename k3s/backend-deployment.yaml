@@ -4,7 +4,7 @@ metadata:
   name: homelab-backend
   namespace: homelab-dashboard
 spec:
-  replicas: 1
+  replicas: 3
   selector:
     matchLabels:
       app: homelab-backend
@@ -18,6 +18,11 @@ spec:
           image: jeanmichelbb/homelab-be:latest
           ports:
             - containerPort: 8000
+          env:
+            - name: NODE_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: spec.nodeName
           envFrom:
             - configMapRef:
                 name: homelab-backend-config

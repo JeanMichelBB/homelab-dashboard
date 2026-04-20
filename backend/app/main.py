@@ -1,3 +1,5 @@
+import os
+
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
@@ -25,3 +27,11 @@ app.include_router(k3s.router, prefix="/api")
 @app.get("/api/health")
 async def health():
     return {"status": "ok"}
+
+
+@app.get("/api/pod")
+async def pod_info():
+    return {
+        "hostname": os.environ.get("HOSTNAME", ""),
+        "node": os.environ.get("NODE_NAME", ""),
+    }

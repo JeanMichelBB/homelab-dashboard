@@ -67,3 +67,8 @@ export interface K3sData {
   nodes: K3sNode[]
   pods: { total: number; running: number; pending: number; failed: number }
 }
+
+export interface PodInfo {
+  hostname: string
+  node: string
+}

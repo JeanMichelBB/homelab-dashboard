@@ -1,6 +1,6 @@
 import { useEffect, useState, type ReactNode } from 'react'
 import { api } from '../api/client'
-import type { Node, K3sData } from '../types'
+import type { Node, K3sData, PodInfo } from '../types/index'
 import Hero from '../components/Hero'
 import Header from '../components/Header'
 import NetworkTopology from '../components/NetworkTopology'
@@ -12,14 +12,17 @@ import CloudflareSection from '../components/CloudflareSection'
 export default function Home({ toggleTheme, dark }: { toggleTheme: () => void; dark: boolean }) {
   const [nodes, setNodes] = useState<Node[]>([])
   const [k3s, setK3s] = useState<K3sData | null>(null)
+  const [pod, setPod] = useState<PodInfo | null>(null)
 
-  useEffect(() => {
+  const refreshNodes = () => {
     api.nodes().then(setNodes).catch(console.error)
     api.k3s().then(setK3s).catch(console.error)
-    const interval = setInterval(() => {
-      api.nodes().then(setNodes).catch(console.error)
-      api.k3s().then(setK3s).catch(console.error)
-    }, 30000)
+  }
+
+  useEffect(() => {
+    refreshNodes()
+    api.pod().then(setPod).catch(console.error)
+    const interval = setInterval(refreshNodes, 30000)
     return () => clearInterval(interval)
   }, [])
 
@@ -54,7 +57,7 @@ export default function Home({ toggleTheme, dark }: { toggleTheme: () => void; d
           <SectionHeader number="03" title="k3s Cluster"
             description="A lightweight Kubernetes cluster spanning the HomeLab and OCI cloud. elitedesk acts as the control plane. The two OCI free-tier ARM nodes are workers — together they provide enough capacity to run the dashboard, several web apps, and supporting services."
           />
-          <K3sSection nodes={byName} k3s={k3s} />
+          <K3sSection nodes={byName} k3s={k3s} pod={pod} onRefresh={refreshNodes} />
         </section>
 
         {/* Cloudflare */}

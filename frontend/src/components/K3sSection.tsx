@@ -39,6 +39,8 @@ export default function K3sSection({ nodes, k3s, pod: initialPod }: Props) {
       <div className="border border-gray-200 dark:border-gray-800 rounded-xl p-5 bg-white dark:bg-gray-900">
         <div className="flex items-center justify-between mb-5">
           <span className="text-xs font-mono text-gray-400 dark:text-gray-500">k3s cluster</span>
+          <div className="flex items-center gap-2">
+            <span className="text-xs text-gray-400 dark:text-gray-600 hidden sm:block">Each request is served by one of three replicas — click rotate to re-route to a different pod and see which node picks it up.</span>
           <button
             onClick={rotatePod}
             disabled={spinning}
@@ -50,6 +52,7 @@ export default function K3sSection({ nodes, k3s, pod: initialPod }: Props) {
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 3v5h-5" />
             </svg>
           </button>
+          </div>
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">

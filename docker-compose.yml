@@ -28,6 +28,7 @@ services:
       - GLUETUN_URL=${GLUETUN_URL}
       - K3S_URL=${K3S_URL}
       - K3S_BEARER_TOKEN=${K3S_BEARER_TOKEN}
+      - NODE_NAME=tselitedesk
     depends_on:
       - redis
 

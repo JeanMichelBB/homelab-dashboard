@@ -17,6 +17,7 @@ export default function Home({ toggleTheme, dark }: { toggleTheme: () => void; d
   const refreshNodes = () => {
     api.nodes().then(setNodes).catch(console.error)
     api.k3s().then(setK3s).catch(console.error)
+    api.pod().then(setPod).catch(console.error)
   }
 
   useEffect(() => {

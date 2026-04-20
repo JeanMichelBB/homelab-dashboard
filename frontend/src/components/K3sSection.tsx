@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { api } from '../api/client'
 import type { Node, K3sData, PodInfo } from '../types/index'
 
@@ -10,7 +10,7 @@ interface Props {
 }
 
 const CLUSTER_NODES = [
-  { key: 'tselitedesk', hw: 'HP EliteDesk 800 G2', os: 'Ubuntu', role: 'control-plane', nodeName: 'tselitedesk' },
+  { key: 'tselitedesk', hw: 'HP EliteDesk 800 G2', os: 'Ubuntu', role: 'control-plane', nodeName: 'elitedesk' },
   { key: 'oci-node-1',  hw: 'OCI VM.Standard.A1 (ARM)', os: 'Ubuntu', role: 'worker 1', nodeName: 'oci-node-1' },
   { key: 'oci-node-2',  hw: 'OCI VM.Standard.A1 (ARM)', os: 'Ubuntu', role: 'worker 2', nodeName: 'oci-node-2' },
 ]
@@ -18,8 +18,14 @@ const CLUSTER_NODES = [
 export default function K3sSection({ nodes, k3s, pod: initialPod }: Props) {
   const [pod, setPod] = useState<PodInfo | null>(null)
   const [spinning, setSpinning] = useState(false)
+  const initialized = useRef(false)
 
-  useEffect(() => { if (initialPod) setPod(initialPod) }, [initialPod])
+  useEffect(() => {
+    if (initialPod && !initialized.current) {
+      setPod(initialPod)
+      initialized.current = true
+    }
+  }, [initialPod])
 
   const rotatePod = () => {
     setSpinning(true)
@@ -59,12 +65,6 @@ export default function K3sSection({ nodes, k3s, pod: initialPod }: Props) {
           ))}
         </div>
 
-        {/* DEBUG — remove once node names confirmed */}
-        {pod && (
-          <div className="mt-3 text-xs font-mono text-gray-300 dark:text-gray-700">
-            node: "{pod.node}" · pod: "{pod.hostname}"
-          </div>
-        )}
       </div>
 
       {/* Pod stats */}

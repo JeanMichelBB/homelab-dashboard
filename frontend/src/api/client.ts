@@ -17,5 +17,5 @@ export const api = {
   gpu: () => get<GpuData>('/gpu'),
   network: () => get<NetworkData>('/network'),
   k3s: () => get<K3sData>('/k3s'),
-  pod: () => fetch('/pod.json').then(r => r.ok ? r.json() : Promise.reject()) as Promise<PodInfo>,
+  pod: () => fetch(`/pod.json?t=${Date.now()}`).then(r => r.ok ? r.json() : Promise.reject()) as Promise<PodInfo>,
 }

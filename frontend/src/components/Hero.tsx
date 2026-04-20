@@ -1,11 +1,13 @@
-import type { Node, K3sData } from '../types'
+import type { Node, K3sData } from '../types/index'
+import { Skeleton } from './Skeleton'
 
 interface Props {
   nodes: Node[]
   k3s: K3sData | null
+  loading?: boolean
 }
 
-export default function Hero({ nodes, k3s }: Props) {
+export default function Hero({ nodes, k3s, loading }: Props) {
   const onlineCount = nodes.filter(n => n.online).length
   const totalCount = nodes.length
 
@@ -36,7 +38,9 @@ export default function Hero({ nodes, k3s }: Props) {
             <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75" />
             <span className="relative inline-flex rounded-full h-2 w-2 bg-green-400" />
           </span>
-          <span className="text-xs text-gray-500 dark:text-gray-500 font-mono">live — {onlineCount}/{totalCount} nodes online</span>
+          <span className="text-xs text-gray-500 dark:text-gray-500 font-mono">
+            live — {loading ? <Skeleton className="w-6 h-3" /> : `${onlineCount}/${totalCount} nodes online`}
+          </span>
         </div>
 
         {/* title */}
@@ -56,11 +60,11 @@ export default function Hero({ nodes, k3s }: Props) {
 
         {/* stats row */}
         <div className="flex flex-wrap gap-6">
-          <Stat value={totalCount || '—'} label="nodes" />
+          <Stat value={loading ? null : (totalCount || '—')} label="nodes" />
           <Divider />
-          <Stat value={k3s ? k3s.pods.running : '—'} label="pods running" highlight />
+          <Stat value={loading ? null : (k3s ? k3s.pods.running : '—')} label="pods running" highlight />
           <Divider />
-          <Stat value={k3s ? k3s.nodes.length : '—'} label="k3s nodes" />
+          <Stat value={loading ? null : (k3s ? k3s.nodes.length : '—')} label="k3s nodes" />
           <Divider />
           <Stat value="6" label="public projects" />
         </div>
@@ -70,10 +74,12 @@ export default function Hero({ nodes, k3s }: Props) {
   )
 }
 
-function Stat({ value, label, highlight }: { value: number | string; label: string; highlight?: boolean }) {
+function Stat({ value, label, highlight }: { value: number | string | null; label: string; highlight?: boolean }) {
   return (
     <div>
-      <div className={`text-2xl font-bold ${highlight ? 'text-green-500 dark:text-green-400' : 'text-gray-900 dark:text-white'}`}>{value}</div>
+      <div className={`text-2xl font-bold ${highlight ? 'text-green-500 dark:text-green-400' : 'text-gray-900 dark:text-white'}`}>
+        {value === null ? <span className="inline-block w-8 h-7 rounded bg-gray-200 dark:bg-gray-800 animate-pulse" /> : value}
+      </div>
       <div className="text-xs text-gray-500 mt-0.5">{label}</div>
     </div>
   )

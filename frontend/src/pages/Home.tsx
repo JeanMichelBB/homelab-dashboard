@@ -33,32 +33,20 @@ export default function Home({ toggleTheme, dark }: { toggleTheme: () => void; d
 
   const byName = Object.fromEntries(nodes.map(n => [n.name, n]))
 
-  if (loading) return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-950 flex items-center justify-center">
-      <div className="flex flex-col items-center gap-4">
-        <svg className="w-8 h-8 animate-spin text-indigo-500" fill="none" viewBox="0 0 24 24">
-          <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-          <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4l3-3-3-3v4a8 8 0 00-8 8h4z" />
-        </svg>
-        <span className="text-sm text-gray-400 dark:text-gray-600 font-mono">loading infrastructure data…</span>
-      </div>
-    </div>
-  )
-
   return (
     <div className="min-h-screen bg-gray-50 text-gray-900 dark:bg-gray-950 dark:text-gray-100">
       <Header toggleTheme={toggleTheme} dark={dark} />
       <main className="max-w-5xl mx-auto px-6 py-12 space-y-20">
 
         {/* Hero */}
-        <Hero nodes={nodes} k3s={k3s} />
+        <Hero nodes={nodes} k3s={k3s} loading={loading} />
 
         {/* Physical network */}
         <section id="network">
           <SectionHeader number="01" title="Physical Network"
             description="All physical machines sit behind OPNsense on a home LAN. Internet traffic leaving the HomeLab goes exclusively through Gluetun (ProtonVPN WireGuard) on elitedesk — nothing else has a direct outbound internet path."
           />
-          <NetworkTopology nodes={byName} />
+          <NetworkTopology nodes={byName} loading={loading} />
         </section>
 
         {/* Tailscale */}
@@ -66,7 +54,7 @@ export default function Home({ toggleTheme, dark }: { toggleTheme: () => void; d
           <SectionHeader number="02" title="Tailscale Overlay"
             description="Tailscale connects the remote nodes — the monitoring Pi and two OCI cloud workers — back to the HomeLab without any firewall rules or VPN tunnels to configure. The HomeLab machines join the same tailnet, making the entire setup reachable from anywhere as a flat private network."
           />
-          <TailscaleSection nodes={byName} />
+          <TailscaleSection nodes={byName} loading={loading} />
         </section>
 
         {/* k3s */}
@@ -74,7 +62,7 @@ export default function Home({ toggleTheme, dark }: { toggleTheme: () => void; d
           <SectionHeader number="03" title="k3s Cluster"
             description="A lightweight Kubernetes cluster spanning the HomeLab and OCI cloud. elitedesk acts as the control plane. The two OCI free-tier ARM nodes are workers — together they provide enough capacity to run the dashboard, several web apps, and supporting services."
           />
-          <K3sSection nodes={byName} k3s={k3s} pod={pod} onRefresh={refreshNodes} />
+          <K3sSection nodes={byName} k3s={k3s} pod={pod} onRefresh={refreshNodes} loading={loading} />
         </section>
 
         {/* Cloudflare */}

@@ -1,7 +1,9 @@
 import type { Node } from '../types'
+import { LiveDot } from './Skeleton'
 
 interface Props {
   nodes: Record<string, Node>
+  loading?: boolean
 }
 
 const REMOTE_NODES = [
@@ -28,7 +30,7 @@ const REMOTE_NODES = [
   },
 ]
 
-export default function TailscaleSection({ nodes }: Props) {
+export default function TailscaleSection({ nodes, loading }: Props) {
   return (
     <div className="space-y-4">
       <div className="border border-dashed border-gray-300 dark:border-gray-700 rounded-xl p-5 bg-gray-50/40 dark:bg-gray-900/40">
@@ -43,7 +45,7 @@ export default function TailscaleSection({ nodes }: Props) {
             return (
               <div key={node.key} className="border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 rounded-lg px-4 py-3">
                 <div className="flex items-center gap-2 mb-0.5">
-                  <span className={`w-2 h-2 rounded-full flex-shrink-0 ${live?.online === true ? 'bg-green-400' : live?.online === false ? 'bg-red-500' : 'bg-gray-300 dark:bg-gray-600'}`} />
+                  <LiveDot online={live?.online} loading={loading} />
                   <span className="font-semibold text-gray-800 dark:text-gray-200 text-sm">{node.hw}</span>
                 </div>
                 <div className="text-xs text-gray-500 mb-1 ml-4">{node.display}</div>

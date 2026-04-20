@@ -1,12 +1,14 @@
 import { useState, useEffect, useRef } from 'react'
 import { api } from '../api/client'
 import type { Node, K3sData, PodInfo } from '../types/index'
+import { LiveDot, Skeleton } from './Skeleton'
 
 interface Props {
   nodes: Record<string, Node>
   k3s: K3sData | null
   pod: PodInfo | null
   onRefresh: () => void
+  loading?: boolean
 }
 
 const CLUSTER_NODES = [
@@ -15,7 +17,7 @@ const CLUSTER_NODES = [
   { key: 'oci-node-2',  hw: 'OCI VM.Standard.A1 (ARM)', os: 'Ubuntu', role: 'worker 2', nodeName: 'oci-node-2' },
 ]
 
-export default function K3sSection({ nodes, k3s, pod: initialPod }: Props) {
+export default function K3sSection({ nodes, k3s, pod: initialPod, loading }: Props) {
   const [pod, setPod] = useState<PodInfo | null>(null)
   const [spinning, setSpinning] = useState(false)
   const initialized = useRef(false)
@@ -64,6 +66,7 @@ export default function K3sSection({ nodes, k3s, pod: initialPod }: Props) {
               role={n.role}
               online={nodes[n.key]?.online}
               serving={pod?.node === n.nodeName}
+              loading={loading}
             />
           ))}
         </div>
@@ -71,12 +74,12 @@ export default function K3sSection({ nodes, k3s, pod: initialPod }: Props) {
       </div>
 
       {/* Pod stats */}
-      {k3s && (
+      {(k3s || loading) && (
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
           {(['total', 'running', 'pending', 'failed'] as const).map(key => (
             <div key={key} className="border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 rounded-lg px-4 py-3 text-center">
-              <div className={`text-2xl font-bold ${key === 'failed' && k3s.pods.failed > 0 ? 'text-red-400' : key === 'running' ? 'text-green-400' : 'text-gray-900 dark:text-white'}`}>
-                {k3s.pods[key]}
+              <div className={`text-2xl font-bold ${!loading && k3s && key === 'failed' && k3s.pods.failed > 0 ? 'text-red-400' : key === 'running' ? 'text-green-400' : 'text-gray-900 dark:text-white'}`}>
+                {loading ? <Skeleton className="w-8 h-7 mx-auto" /> : k3s?.pods[key]}
               </div>
               <div className="text-xs text-gray-400 dark:text-gray-500 mt-1 font-mono">{key}</div>
             </div>
@@ -88,13 +91,13 @@ export default function K3sSection({ nodes, k3s, pod: initialPod }: Props) {
   )
 }
 
-function K3sNode({ hw, os, role, online, serving }: {
-  hw: string; os: string; role: string; online?: boolean; serving?: boolean
+function K3sNode({ hw, os, role, online, serving, loading }: {
+  hw: string; os: string; role: string; online?: boolean; serving?: boolean; loading?: boolean
 }) {
   return (
     <div className={`border rounded-lg px-4 py-3 ${serving ? 'border-blue-200 dark:border-blue-900 bg-blue-50 dark:bg-blue-950/30' : 'border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-gray-950'}`}>
       <div className="flex items-center gap-2 mb-0.5">
-        <span className={`w-2 h-2 rounded-full flex-shrink-0 ${online === true ? 'bg-green-400' : online === false ? 'bg-red-500' : 'bg-gray-300 dark:bg-gray-600'}`} />
+        <LiveDot online={online} loading={loading} />
         <span className="font-semibold text-sm text-gray-800 dark:text-gray-200">{hw}</span>
       </div>
       <div className="text-xs text-gray-500 mb-2 ml-4">{os}</div>

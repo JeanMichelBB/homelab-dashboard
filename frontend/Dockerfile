@@ -4,7 +4,7 @@ WORKDIR /app
 COPY package.json package-lock.json ./
 RUN npm install
 COPY . .
-RUN npm run build
+RUN VITE_API_URL=https://homelabapi.sacenpapier.org/api npm run build
 
 FROM nginx:alpine
 COPY --from=build /app/dist /usr/share/nginx/html

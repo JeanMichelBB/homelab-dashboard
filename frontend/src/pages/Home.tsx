@@ -1,14 +1,15 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, type ReactNode } from 'react'
 import { api } from '../api/client'
 import type { Node, K3sData } from '../types'
 import Hero from '../components/Hero'
+import Header from '../components/Header'
 import NetworkTopology from '../components/NetworkTopology'
 import TailscaleSection from '../components/TailscaleSection'
 import K3sSection from '../components/K3sSection'
 import CloudflareSection from '../components/CloudflareSection'
 
 
-export default function Home() {
+export default function Home({ toggleTheme, dark }: { toggleTheme: () => void; dark: boolean }) {
   const [nodes, setNodes] = useState<Node[]>([])
   const [k3s, setK3s] = useState<K3sData | null>(null)
 
@@ -25,7 +26,8 @@ export default function Home() {
   const byName = Object.fromEntries(nodes.map(n => [n.name, n]))
 
   return (
-    <div className="min-h-screen bg-gray-950 text-gray-100">
+    <div className="min-h-screen bg-gray-50 text-gray-900 dark:bg-gray-950 dark:text-gray-100">
+      <Header toggleTheme={toggleTheme} dark={dark} />
       <main className="max-w-5xl mx-auto px-6 py-12 space-y-20">
 
         {/* Hero */}
@@ -34,7 +36,7 @@ export default function Home() {
         {/* Physical network */}
         <section id="network">
           <SectionHeader number="01" title="Physical Network"
-            description="All physical machines sit behind OPNsense on a home LAN. Internet traffic leaving the homelab goes exclusively through Gluetun (ProtonVPN WireGuard) on elitedesk — nothing else has a direct outbound internet path."
+            description="All physical machines sit behind OPNsense on a home LAN. Internet traffic leaving the HomeLab goes exclusively through Gluetun (ProtonVPN WireGuard) on elitedesk — nothing else has a direct outbound internet path."
           />
           <NetworkTopology nodes={byName} />
         </section>
@@ -42,7 +44,7 @@ export default function Home() {
         {/* Tailscale */}
         <section id="tailscale">
           <SectionHeader number="02" title="Tailscale Overlay"
-            description="Tailscale connects the remote nodes — the monitoring Pi and two OCI cloud workers — back to the homelab without any firewall rules or VPN tunnels to configure. The homelab machines join the same tailnet, making the entire setup reachable from anywhere as a flat private network."
+            description="Tailscale connects the remote nodes — the monitoring Pi and two OCI cloud workers — back to the HomeLab without any firewall rules or VPN tunnels to configure. The HomeLab machines join the same tailnet, making the entire setup reachable from anywhere as a flat private network."
           />
           <TailscaleSection nodes={byName} />
         </section>
@@ -50,7 +52,7 @@ export default function Home() {
         {/* k3s */}
         <section id="k3s">
           <SectionHeader number="03" title="k3s Cluster"
-            description="A lightweight Kubernetes cluster spanning the homelab and OCI cloud. elitedesk acts as the control plane. The two OCI free-tier ARM nodes are workers — together they provide enough capacity to run the dashboard, several web apps, and supporting services."
+            description="A lightweight Kubernetes cluster spanning the HomeLab and OCI cloud. elitedesk acts as the control plane. The two OCI free-tier ARM nodes are workers — together they provide enough capacity to run the dashboard, several web apps, and supporting services."
           />
           <K3sSection nodes={byName} k3s={k3s} />
         </section>
@@ -65,32 +67,57 @@ export default function Home() {
 
       </main>
 
-      <footer className="border-t border-gray-800 px-6 py-10 text-xs text-gray-600">
-        <div className="max-w-5xl mx-auto grid grid-cols-1 sm:grid-cols-3 gap-6">
+      <footer className="border-t border-gray-200 dark:border-gray-800 text-xs text-gray-500 dark:text-gray-600">
+        <div className="max-w-5xl mx-auto px-6 pt-10 pb-6">
 
-          <div>
-            <div className="text-gray-400 font-semibold mb-2">homelab</div>
-            <p className="leading-relaxed">Self-hosted infrastructure running on physical hardware, OCI free-tier cloud, and a Raspberry Pi.</p>
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-8 mb-8">
+
+            <div className="col-span-2 sm:col-span-1">
+              <div className="text-sm font-semibold text-gray-800 dark:text-gray-200 mb-3">HomeLab</div>
+              <p className="leading-relaxed mb-3">Self-hosted infrastructure running on physical hardware, OCI free-tier cloud, and a Raspberry Pi.</p>
+              <div className="flex items-center gap-1.5 text-gray-400 dark:text-gray-600">
+                <span className="w-1.5 h-1.5 rounded-full bg-green-400" />
+                live · refreshes every 30s
+              </div>
+            </div>
+
+            <div>
+              <div className="text-gray-700 dark:text-gray-400 font-semibold mb-3">infrastructure</div>
+              <ul className="space-y-1.5">
+                <li>· HP EliteDesk 800 G2</li>
+                <li>· Raspberry Pi 4</li>
+                <li>· Beelink ME Pro 2</li>
+                <li>· Gaming PC RTX 5070</li>
+                <li>· OCI VM.A1 × 2</li>
+              </ul>
+            </div>
+
+            <div>
+              <div className="text-gray-700 dark:text-gray-400 font-semibold mb-3">stack</div>
+              <ul className="space-y-1.5">
+                <li>· <A href="https://fastapi.tiangolo.com">FastAPI</A> + Redis</li>
+                <li>· <A href="https://react.dev">React</A> + <A href="https://tailwindcss.com">Tailwind</A></li>
+                <li>· <A href="https://k3s.io">k3s</A> + <A href="https://traefik.io">Traefik</A></li>
+                <li>· <A href="https://cloudflare.com">Cloudflare</A></li>
+                <li>· <A href="https://tailscale.com">Tailscale</A></li>
+              </ul>
+            </div>
+
+            <div>
+              <div className="text-gray-700 dark:text-gray-400 font-semibold mb-3">links</div>
+              <ul className="space-y-1.5">
+                <li>· <a href="https://sacenpapier.org" className="hover:text-gray-900 dark:hover:text-gray-300 transition-colors">sacenpapier.org</a></li>
+                <li>· <a href="https://github.com/JeanMichelBB" className="hover:text-gray-900 dark:hover:text-gray-300 transition-colors">github.com/JeanMichelBB</a></li>
+                <li>· <a href="https://github.com/JeanMichelBB/homelab-dashboard" className="hover:text-gray-900 dark:hover:text-gray-300 transition-colors">homelab-dashboard</a></li>
+                <li>· <a href="https://homelab.sacenpapier.org" className="hover:text-gray-900 dark:hover:text-gray-300 transition-colors">homelab.sacenpapier.org</a></li>
+              </ul>
+            </div>
+
           </div>
 
-          <div>
-            <div className="text-gray-400 font-semibold mb-2">stack</div>
-            <ul className="space-y-1">
-              <li>· FastAPI + Redis (backend)</li>
-              <li>· React + Tailwind (frontend)</li>
-              <li>· k3s on OCI + elitedesk</li>
-              <li>· Cloudflare DNS + TLS</li>
-              <li>· Tailscale overlay mesh</li>
-            </ul>
-          </div>
-
-          <div>
-            <div className="text-gray-400 font-semibold mb-2">links</div>
-            <ul className="space-y-1">
-              <li>· <a href="https://sacenpapier.org" className="hover:text-gray-300 transition-colors">sacenpapier.org</a></li>
-              <li>· <a href="https://github.com/JeanMichelBB" className="hover:text-gray-300 transition-colors">github.com/JeanMichelBB</a></li>
-              <li className="mt-3 text-gray-700">live data · refreshes every 30s</li>
-            </ul>
+          <div className="border-t border-gray-200 dark:border-gray-800 pt-4 flex flex-col sm:flex-row items-center justify-between gap-2 text-gray-400 dark:text-gray-700">
+            <span>HomeLab · self-hosted infrastructure showcase</span>
+            <span>built with FastAPI + React + k3s</span>
           </div>
 
         </div>
@@ -111,14 +138,22 @@ function NavCard({ href, icon, label, stat }: { href: string; icon: string; labe
   )
 }
 
+function A({ href, children }: { href: string; children: ReactNode }) {
+  return (
+    <a href={href} target="_blank" rel="noopener noreferrer" className="hover:text-gray-700 dark:hover:text-gray-300 transition-colors underline underline-offset-2 decoration-gray-300 dark:decoration-gray-700">
+      {children}
+    </a>
+  )
+}
+
 function SectionHeader({ number, title, description }: { number: string; title: string; description: string }) {
   return (
     <div className="mb-8">
       <div className="flex items-baseline gap-3 mb-3">
-        <span className="text-xs font-mono text-gray-600">{number}</span>
-        <h2 className="text-lg font-semibold text-white">{title}</h2>
+        <span className="text-xs font-mono text-gray-400 dark:text-gray-600">{number}</span>
+        <h2 className="text-lg font-semibold text-gray-900 dark:text-white">{title}</h2>
       </div>
-      <p className="text-sm text-gray-400 leading-relaxed max-w-2xl">{description}</p>
+      <p className="text-sm text-gray-500 dark:text-gray-400 leading-relaxed max-w-2xl">{description}</p>
     </div>
   )
 }

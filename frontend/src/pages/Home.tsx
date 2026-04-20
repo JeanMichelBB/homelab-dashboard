@@ -13,7 +13,8 @@ export default function Home({ toggleTheme, dark }: { toggleTheme: () => void; d
   const [nodes, setNodes] = useState<Node[]>([])
   const [k3s, setK3s] = useState<K3sData | null>(null)
   const [pod, setPod] = useState<PodInfo | null>(null)
-  const [loading, setLoading] = useState(true)
+  const [nodesLoading, setNodesLoading] = useState(true)
+  const [k3sLoading, setK3sLoading] = useState(true)
 
   const refreshNodes = () => {
     api.nodes().then(setNodes).catch(console.error)
@@ -22,11 +23,9 @@ export default function Home({ toggleTheme, dark }: { toggleTheme: () => void; d
   }
 
   useEffect(() => {
-    Promise.all([
-      api.nodes().then(setNodes),
-      api.k3s().then(setK3s),
-      api.pod().then(setPod),
-    ]).catch(console.error).finally(() => setLoading(false))
+    api.nodes().then(setNodes).catch(console.error).finally(() => setNodesLoading(false))
+    api.k3s().then(setK3s).catch(console.error).finally(() => setK3sLoading(false))
+    api.pod().then(setPod).catch(console.error)
     const interval = setInterval(refreshNodes, 30000)
     return () => clearInterval(interval)
   }, [])
@@ -39,14 +38,14 @@ export default function Home({ toggleTheme, dark }: { toggleTheme: () => void; d
       <main className="max-w-5xl mx-auto px-6 py-12 space-y-20">
 
         {/* Hero */}
-        <Hero nodes={nodes} k3s={k3s} loading={loading} />
+        <Hero nodes={nodes} k3s={k3s} loading={nodesLoading || k3sLoading} />
 
         {/* Physical network */}
         <section id="network">
           <SectionHeader number="01" title="Physical Network"
             description="All physical machines sit behind OPNsense on a home LAN. Internet traffic leaving the HomeLab goes exclusively through Gluetun (ProtonVPN WireGuard) on elitedesk — nothing else has a direct outbound internet path."
           />
-          <NetworkTopology nodes={byName} loading={loading} />
+          <NetworkTopology nodes={byName} loading={nodesLoading} />
         </section>
 
         {/* Tailscale */}
@@ -54,7 +53,7 @@ export default function Home({ toggleTheme, dark }: { toggleTheme: () => void; d
           <SectionHeader number="02" title="Tailscale Overlay"
             description="Tailscale connects the remote nodes — the monitoring Pi and two OCI cloud workers — back to the HomeLab without any firewall rules or VPN tunnels to configure. The HomeLab machines join the same tailnet, making the entire setup reachable from anywhere as a flat private network."
           />
-          <TailscaleSection nodes={byName} loading={loading} />
+          <TailscaleSection nodes={byName} loading={nodesLoading} />
         </section>
 
         {/* k3s */}
@@ -62,7 +61,7 @@ export default function Home({ toggleTheme, dark }: { toggleTheme: () => void; d
           <SectionHeader number="03" title="k3s Cluster"
             description="A lightweight Kubernetes cluster spanning the HomeLab and OCI cloud. elitedesk acts as the control plane. The two OCI free-tier ARM nodes are workers — together they provide enough capacity to run the dashboard, several web apps, and supporting services."
           />
-          <K3sSection nodes={byName} k3s={k3s} pod={pod} onRefresh={refreshNodes} loading={loading} />
+          <K3sSection nodes={byName} k3s={k3s} pod={pod} onRefresh={refreshNodes} loading={k3sLoading} />
         </section>
 
         {/* Cloudflare */}

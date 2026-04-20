@@ -13,6 +13,7 @@ export default function Home({ toggleTheme, dark }: { toggleTheme: () => void; d
   const [nodes, setNodes] = useState<Node[]>([])
   const [k3s, setK3s] = useState<K3sData | null>(null)
   const [pod, setPod] = useState<PodInfo | null>(null)
+  const [loading, setLoading] = useState(true)
 
   const refreshNodes = () => {
     api.nodes().then(setNodes).catch(console.error)
@@ -21,13 +22,28 @@ export default function Home({ toggleTheme, dark }: { toggleTheme: () => void; d
   }
 
   useEffect(() => {
-    refreshNodes()
-    api.pod().then(setPod).catch(console.error)
+    Promise.all([
+      api.nodes().then(setNodes),
+      api.k3s().then(setK3s),
+      api.pod().then(setPod),
+    ]).catch(console.error).finally(() => setLoading(false))
     const interval = setInterval(refreshNodes, 30000)
     return () => clearInterval(interval)
   }, [])
 
   const byName = Object.fromEntries(nodes.map(n => [n.name, n]))
+
+  if (loading) return (
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-950 flex items-center justify-center">
+      <div className="flex flex-col items-center gap-4">
+        <svg className="w-8 h-8 animate-spin text-indigo-500" fill="none" viewBox="0 0 24 24">
+          <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+          <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4l3-3-3-3v4a8 8 0 00-8 8h4z" />
+        </svg>
+        <span className="text-sm text-gray-400 dark:text-gray-600 font-mono">loading infrastructure data…</span>
+      </div>
+    </div>
+  )
 
   return (
     <div className="min-h-screen bg-gray-50 text-gray-900 dark:bg-gray-950 dark:text-gray-100">

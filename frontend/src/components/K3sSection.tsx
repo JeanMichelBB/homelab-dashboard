@@ -15,22 +15,15 @@ const CLUSTER_NODES = [
   { key: 'oci-node-2',  hw: 'OCI VM.Standard.A1 (ARM)', os: 'Ubuntu', role: 'worker 2', nodeName: 'oci-node-2' },
 ]
 
-export default function K3sSection({ nodes, k3s, pod: initialPod, onRefresh }: Props) {
+export default function K3sSection({ nodes, k3s, pod: initialPod }: Props) {
   const [pod, setPod] = useState<PodInfo | null>(null)
+  const [spinning, setSpinning] = useState(false)
 
   useEffect(() => { if (initialPod) setPod(initialPod) }, [initialPod])
-  const [spinning, setSpinning] = useState(false)
-  const [nodesSpinning, setNodesSpinning] = useState(false)
 
   const rotatePod = () => {
     setSpinning(true)
     api.pod().then(setPod).catch(console.error).finally(() => setSpinning(false))
-  }
-
-  const handleRefresh = () => {
-    setNodesSpinning(true)
-    onRefresh()
-    setTimeout(() => setNodesSpinning(false), 1000)
   }
 
   return (
@@ -65,6 +58,13 @@ export default function K3sSection({ nodes, k3s, pod: initialPod, onRefresh }: P
             />
           ))}
         </div>
+
+        {/* DEBUG — remove once node names confirmed */}
+        {pod && (
+          <div className="mt-3 text-xs font-mono text-gray-300 dark:text-gray-700">
+            node: "{pod.node}" · pod: "{pod.hostname}"
+          </div>
+        )}
       </div>
 
       {/* Pod stats */}
@@ -80,20 +80,6 @@ export default function K3sSection({ nodes, k3s, pod: initialPod, onRefresh }: P
           ))}
         </div>
       )}
-
-      {/* Refresh */}
-      <div className="flex items-center justify-between text-xs text-gray-400 dark:text-gray-600">
-        <span>Node status and pod counts are fetched live — refresh to update.</span>
-        <button
-          onClick={handleRefresh}
-          className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-gray-200 dark:border-gray-800 hover:border-gray-300 dark:hover:border-gray-700 hover:text-gray-700 dark:hover:text-gray-300 transition-colors"
-        >
-          <svg className={`w-3 h-3 ${nodesSpinning ? 'animate-spin' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
-          </svg>
-          Refresh
-        </button>
-      </div>
 
     </div>
   )

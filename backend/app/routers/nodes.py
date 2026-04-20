@@ -94,7 +94,7 @@ async def get_nodes():
                       "Main server — media, k3s control plane, gpu-proxy", ip_e),
         _glances_node("tspi", settings.glances_tspi_url,
                       "Monitoring — Prometheus, Grafana", ip_pi),
-        _prometheus_node("tswindows11", "Gaming PC — Ollama RTX 5070", ip_win, f"{ip_win}:9091"),
+        _glances_node("tswindows11", settings.glances_win_url, "Gaming PC — Ollama RTX 5070", ip_win),
         _truenas_node(),
         _prometheus_node("oci-node-1", "k3s worker (OCI free tier)", ip_o1, f"{ip_o1}:9100"),
         _prometheus_node("oci-node-2", "k3s worker (OCI free tier)", ip_o2, f"{ip_o2}:9100"),

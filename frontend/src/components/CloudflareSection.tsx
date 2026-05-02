@@ -48,13 +48,13 @@ export default function CloudflareSection() {
       {/* Traffic flow diagram */}
       <div className="border border-gray-200 dark:border-gray-800 rounded-xl p-5 bg-white dark:bg-gray-900 font-mono text-sm">
         <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:gap-0">
-          <FlowNode label="Internet" icon="🌐" dim />
+          <FlowNode label="Internet" sub="WAN" dim />
           <Arrow />
-          <FlowNode label="Cloudflare" sub="DNS + TLS proxy" icon="🟠" highlight />
+          <FlowNode label="Cloudflare" sub="DNS + TLS proxy" highlight />
           <Arrow />
-          <FlowNode label="Traefik" sub="k3s ingress" icon="⚖️" />
+          <FlowNode label="Traefik" sub="k3s ingress" />
           <Arrow />
-          <FlowNode label="Services" sub="k3s pods" icon="📦" />
+          <FlowNode label="Services" sub="k3s pods" />
         </div>
 
         <p className="text-xs text-gray-400 dark:text-gray-600 mt-4 leading-relaxed">
@@ -70,14 +70,14 @@ export default function CloudflareSection() {
           <button
             key={project.name}
             onClick={() => setSelected(project)}
-            className={`text-left border rounded-lg px-4 py-3 transition-colors ${
+            className={`text-left border rounded-xl px-4 py-3 transition-colors ${
               selected.name === project.name
-                ? 'border-indigo-400 dark:border-indigo-500 bg-indigo-50 dark:bg-indigo-950/30'
+                ? 'border-emerald-400 dark:border-emerald-500 bg-emerald-50 dark:bg-emerald-950/30'
                 : 'border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 hover:border-gray-300 dark:hover:border-gray-700'
             }`}
           >
             <div className="flex items-center gap-2 mb-1">
-              <span className={`w-1.5 h-1.5 rounded-full flex-shrink-0 ${selected.name === project.name ? 'bg-indigo-400' : 'bg-orange-400'}`} />
+              <span className={`w-1.5 h-1.5 rounded-full flex-shrink-0 ${selected.name === project.name ? 'bg-emerald-400' : 'bg-orange-400'}`} />
               <span className="font-semibold text-gray-800 dark:text-gray-200 text-sm">{project.name}</span>
             </div>
             <p className="text-xs text-gray-500 mb-2">{project.description}</p>
@@ -130,12 +130,17 @@ export default function CloudflareSection() {
   )
 }
 
-function FlowNode({ label, sub, icon, dim, highlight }: {
-  label: string; sub?: string; icon: string; dim?: boolean; highlight?: boolean
+function FlowNode({ label, sub, dim, highlight }: {
+  label: string; sub?: string; dim?: boolean; highlight?: boolean
 }) {
   return (
-    <div className={`flex items-center gap-2 px-3 py-2 rounded-lg border ${highlight ? 'border-orange-200 dark:border-orange-800 bg-orange-50 dark:bg-orange-950/40' : dim ? 'border-gray-200 dark:border-gray-800 bg-transparent' : 'border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-gray-950'}`}>
-      <span>{icon}</span>
+    <div className={`flex items-center gap-2 px-3 py-2 rounded-lg border ${
+      highlight
+        ? 'border-orange-200 dark:border-orange-800 bg-orange-50 dark:bg-orange-950/40'
+        : dim
+        ? 'border-transparent bg-transparent'
+        : 'border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800/60'
+    }`}>
       <div>
         <div className={`font-semibold text-xs ${dim ? 'text-gray-400 dark:text-gray-600' : 'text-gray-700 dark:text-gray-200'}`}>{label}</div>
         {sub && <div className="text-xs text-gray-400 dark:text-gray-600">{sub}</div>}

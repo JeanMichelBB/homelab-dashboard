@@ -12,64 +12,40 @@ export default function Hero({ nodes, k3s, loading }: Props) {
   const totalCount = nodes.length
 
   return (
-    <section className="relative rounded-2xl overflow-hidden border border-indigo-200 dark:border-indigo-900/60 bg-white dark:bg-gray-900 shadow-[0_0_80px_rgba(99,102,241,0.08)]">
+    <section className="border border-gray-200 dark:border-gray-800 rounded-2xl bg-white dark:bg-gray-900 px-8 pt-12 pb-10">
 
-      {/* colored glow blobs */}
-      <div className="absolute -top-20 -left-20 w-72 h-72 rounded-full bg-indigo-600/10 blur-3xl" />
-      <div className="absolute -bottom-20 -right-20 w-72 h-72 rounded-full bg-cyan-600/10 blur-3xl" />
-
-      {/* dot grid background */}
-      <div
-        className="absolute inset-0 opacity-[0.15]"
-        style={{
-          backgroundImage: 'radial-gradient(circle, #818cf8 1px, transparent 1px)',
-          backgroundSize: '28px 28px',
-        }}
-      />
-
-      {/* top gradient fade */}
-      <div className="absolute inset-0 bg-gradient-to-b from-white/40 via-transparent to-white dark:from-gray-900/40 dark:via-transparent dark:to-gray-900" />
-
-      <div className="relative px-8 pt-14 pb-10">
-
-        {/* live badge */}
-        <div className="flex items-center gap-2 mb-6">
-          <span className="relative flex h-2 w-2">
-            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75" />
-            <span className="relative inline-flex rounded-full h-2 w-2 bg-green-400" />
-          </span>
-          <span className="text-xs text-gray-500 dark:text-gray-500 font-mono">
-            live — {loading ? <Skeleton className="w-6 h-3" /> : `${onlineCount}/${totalCount} nodes online`}
-          </span>
-        </div>
-
-        {/* title */}
-        <h1 className="text-5xl sm:text-6xl font-bold tracking-tight mb-3">
-          <span className="text-transparent bg-clip-text bg-gradient-to-r from-gray-900 via-indigo-600 to-cyan-500 dark:from-white dark:via-indigo-200 dark:to-cyan-400">
-            HomeLab
-          </span>
-        </h1>
-
-        <p className="text-gray-500 dark:text-gray-400 text-base mb-8 max-w-xl leading-relaxed">
-          Self-hosted infrastructure running on physical hardware, OCI free-tier cloud,
-          and a Raspberry Pi — connected over a{' '}
-          <span className="text-gray-800 dark:text-gray-200">Tailscale</span> mesh, exposed publicly through{' '}
-          <span className="text-gray-800 dark:text-gray-200">Cloudflare</span> and a{' '}
-          <span className="text-gray-800 dark:text-gray-200">k3s</span> cluster.
-        </p>
-
-        {/* stats row */}
-        <div className="flex flex-wrap gap-6">
-          <Stat value={loading ? null : (totalCount || '—')} label="nodes" />
-          <Divider />
-          <Stat value={loading ? null : (k3s ? k3s.pods.running : '—')} label="pods running" highlight />
-          <Divider />
-          <Stat value={loading ? null : (k3s ? k3s.nodes.length : '—')} label="k3s nodes" />
-          <Divider />
-          <Stat value="6" label="public projects" />
-        </div>
-
+      <div className="flex items-center gap-2 mb-8">
+        <span className="relative flex h-2 w-2">
+          <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
+          <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-400" />
+        </span>
+        <span className="text-xs font-mono text-gray-400 dark:text-gray-500">
+          live —{' '}
+          {loading ? <Skeleton className="inline-block w-16 h-3 align-middle" /> : `${onlineCount}/${totalCount} nodes online`}
+        </span>
       </div>
+
+      <h1 className="text-5xl sm:text-6xl font-bold tracking-tight leading-none mb-4 text-gray-900 dark:text-white">
+        HomeLab
+      </h1>
+
+      <p className="text-gray-500 dark:text-gray-400 text-base mb-10 max-w-xl leading-relaxed">
+        Self-hosted infrastructure on physical hardware, OCI free-tier cloud, and a Raspberry Pi —
+        connected over a <span className="text-gray-800 dark:text-gray-200 font-medium">Tailscale</span> mesh,
+        exposed publicly through <span className="text-gray-800 dark:text-gray-200 font-medium">Cloudflare</span> and
+        a <span className="text-gray-800 dark:text-gray-200 font-medium">k3s</span> cluster.
+      </p>
+
+      <div className="flex flex-wrap gap-8">
+        <Stat value={loading ? null : (totalCount || '—')} label="nodes" />
+        <Divider />
+        <Stat value={loading ? null : (k3s ? k3s.pods.running : '—')} label="pods running" highlight />
+        <Divider />
+        <Stat value={loading ? null : (k3s ? k3s.nodes.length : '—')} label="k3s nodes" />
+        <Divider />
+        <Stat value="6" label="public projects" />
+      </div>
+
     </section>
   )
 }
@@ -77,14 +53,16 @@ export default function Hero({ nodes, k3s, loading }: Props) {
 function Stat({ value, label, highlight }: { value: number | string | null; label: string; highlight?: boolean }) {
   return (
     <div>
-      <div className={`text-2xl font-bold ${highlight ? 'text-green-500 dark:text-green-400' : 'text-gray-900 dark:text-white'}`}>
-        {value === null ? <span className="inline-block w-8 h-7 rounded bg-gray-200 dark:bg-gray-800 animate-pulse" /> : value}
+      <div className={`text-2xl font-bold font-mono tabular-nums ${highlight ? 'text-emerald-500 dark:text-emerald-400' : 'text-gray-900 dark:text-white'}`}>
+        {value === null
+          ? <span className="inline-block w-8 h-7 rounded bg-gray-100 dark:bg-gray-800 animate-pulse" />
+          : value}
       </div>
-      <div className="text-xs text-gray-500 mt-0.5">{label}</div>
+      <div className="text-xs text-gray-400 dark:text-gray-600 mt-0.5 font-mono">{label}</div>
     </div>
   )
 }
 
 function Divider() {
-  return <div className="w-px bg-gray-200 dark:bg-gray-700 self-stretch" />
+  return <div className="w-px bg-gray-100 dark:bg-gray-800 self-stretch" />
 }

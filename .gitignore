@@ -10,4 +10,6 @@ backend/venv/
 *.pyc
 .claude/
 .vscode/
+.agents/
 frontend/vite.config.ts.timestamp-*.mjs
+skills-lock.json

@@ -17,7 +17,7 @@ export default function Header({ toggleTheme, dark }: { toggleTheme: () => void;
             <a
               key={href}
               href={href}
-              className="relative hover:text-gray-800 dark:hover:text-gray-200 transition-colors duration-200 after:absolute after:left-0 after:-bottom-0.5 after:h-px after:w-0 after:bg-indigo-400 after:transition-all after:duration-300 hover:after:w-full"
+              className="relative hover:text-gray-800 dark:hover:text-gray-200 transition-colors duration-200 after:absolute after:left-0 after:-bottom-0.5 after:h-px after:w-0 after:bg-emerald-400 after:transition-all after:duration-300 hover:after:w-full"
             >
               {label}
             </a>

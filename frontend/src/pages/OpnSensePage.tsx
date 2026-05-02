@@ -6,75 +6,91 @@ interface Props {
   toggleTheme: () => void
 }
 
+const SECTIONS = [
+  {
+    title: 'Device Info',
+    items: [
+      'Model: Protectli V1210',
+      'Role: Primary firewall, router, gateway',
+      'Location: Home LAN',
+    ],
+  },
+  {
+    title: 'Network Roles',
+    items: [
+      'WAN: Internet uplink handling',
+      'LAN: Internal network gateway',
+      'DHCP server for local subnet',
+      'NAT / Firewall protection',
+    ],
+  },
+  {
+    title: 'Security',
+    items: [
+      'Stateful packet inspection',
+      'Intrusion detection / prevention',
+      'DNS over HTTPS (DoH)',
+      'ACL-based traffic filtering',
+    ],
+  },
+  {
+    title: 'Monitoring',
+    items: [
+      'Tailscale gateway for remote access',
+      'Firewall logs via Tailscale',
+      'Traffic monitoring (if enabled)',
+    ],
+  },
+]
+
 export default function OpnSensePage({ dark, toggleTheme }: Props) {
   return (
     <div className="min-h-screen bg-gray-50 text-gray-900 dark:bg-gray-950 dark:text-gray-100">
       <Header toggleTheme={toggleTheme} dark={dark} />
-      <main className="max-w-4xl mx-auto px-6 py-12">
-        <div className="border border-gray-200 dark:border-gray-800 rounded-xl p-8 bg-white dark:bg-gray-900 shadow-sm">
-          <div className="flex items-center gap-3 mb-6">
-            <span className="text-3xl">🛡️</span>
-            <h1 className="text-2xl font-semibold">OPNsense Firewall</h1>
-          </div>
+      <main className="max-w-4xl mx-auto px-6 py-16">
 
-          <div className="space-y-6 text-sm text-gray-600 dark:text-gray-400">
-            <section>
-              <h2 className="font-semibold text-gray-800 dark:text-gray-200 mb-2">Device Info</h2>
-              <ul className="space-y-1.5">
-                <li>• Model: Protectli V1210</li>
-                <li>• Role: Primary firewall, router, gateway</li>
-                <li>• Location: Home LAN</li>
-              </ul>
-            </section>
+        <Link
+          to="/"
+          className="inline-flex items-center gap-1.5 text-xs font-mono text-gray-400 dark:text-gray-600 hover:text-gray-700 dark:hover:text-gray-300 transition-colors mb-8"
+        >
+          ← back to dashboard
+        </Link>
 
-            <section>
-              <h2 className="font-semibold text-gray-800 dark:text-gray-200 mb-2">Network Roles</h2>
-              <ul className="space-y-1.5">
-                <li>• WAN: Internet uplink handling</li>
-                <li>• LAN: Internal network gateway</li>
-                <li>• DHCP server for local subnet</li>
-                <li>• NAT/Firewall protection</li>
-              </ul>
-            </section>
-
-            <section>
-              <h2 className="font-semibold text-gray-800 dark:text-gray-200 mb-2">Security</h2>
-              <ul className="space-y-1.5">
-                <li>• Stateful packet inspection</li>
-                <li>• Intrusion detection/prevention</li>
-                <li>• DNS over HTTPS (DoH)</li>
-                <li>• ACL-based traffic filtering</li>
-              </ul>
-            </section>
-
-            <section>
-              <h2 className="font-semibold text-gray-800 dark:text-gray-200 mb-2">Monitoring</h2>
-              <ul className="space-y-1.5">
-                <li>• Tailscale gateway for remote access</li>
-                <li>• Firewall logs via Tailscale</li>
-                <li>• Traffic monitoring (if enabled)</li>
-              </ul>
-            </section>
-
-            <section>
-              <h2 className="font-semibold text-gray-800 dark:text-gray-200 mb-2">Access</h2>
-              <ul className="space-y-1.5">
-                <li>• WebUI: <code className="text-xs bg-gray-100 dark:bg-gray-800 px-1 rounded">https://tsopnsense</code></li>
-                <li>• SSH access available</li>
-                <li>• API endpoints (if configured)</li>
-              </ul>
-            </section>
-          </div>
-
-          <div className="mt-8 pt-6 border-t border-gray-200 dark:border-gray-800 flex gap-4">
-            <Link
-              to="/"
-              className="text-sm text-blue-600 dark:text-blue-400 hover:underline"
-            >
-              ← Back to Dashboard
-            </Link>
-          </div>
+        <div className="mb-8">
+          <h1 className="text-3xl font-bold tracking-tight text-gray-900 dark:text-white">OPNsense</h1>
+          <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">Protectli V1210 — primary firewall &amp; gateway</p>
         </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          {SECTIONS.map(section => (
+            <div key={section.title} className="border border-gray-200 dark:border-gray-800 rounded-xl px-5 py-4 bg-white dark:bg-gray-900">
+              <h2 className="text-xs font-mono text-emerald-600 dark:text-emerald-400 mb-3 uppercase tracking-wider">{section.title}</h2>
+              <ul className="space-y-1.5">
+                {section.items.map(item => (
+                  <li key={item} className="flex gap-1.5 text-sm text-gray-600 dark:text-gray-400">
+                    <span className="text-gray-300 dark:text-gray-700 select-none">·</span>
+                    {item}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))}
+        </div>
+
+        <div className="mt-4 border border-gray-200 dark:border-gray-800 rounded-xl px-5 py-4 bg-white dark:bg-gray-900">
+          <h2 className="text-xs font-mono text-emerald-600 dark:text-emerald-400 mb-3 uppercase tracking-wider">Access</h2>
+          <ul className="space-y-1.5 text-sm text-gray-600 dark:text-gray-400">
+            <li className="flex gap-1.5">
+              <span className="text-gray-300 dark:text-gray-700 select-none">·</span>
+              WebUI: <code className="font-mono text-xs bg-gray-100 dark:bg-gray-800 px-1.5 py-0.5 rounded text-gray-700 dark:text-gray-300">https://tsopnsense</code>
+            </li>
+            <li className="flex gap-1.5">
+              <span className="text-gray-300 dark:text-gray-700 select-none">·</span>
+              SSH access available
+            </li>
+          </ul>
+        </div>
+
       </main>
     </div>
   )

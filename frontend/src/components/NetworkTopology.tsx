@@ -1,3 +1,5 @@
+import type { ReactNode } from 'react'
+import { Link } from 'react-router-dom'
 import type { Node } from '../types'
 import { LiveDot } from './Skeleton'
 
@@ -17,14 +19,14 @@ export default function NetworkTopology({ nodes, loading }: Props) {
           <Arrow />
           <FlowNode label="ISP Router" sub="DHCP / gateway" icon="📡" />
           <Arrow />
-          <FlowNode label="OPNsense" sub="Protectli V1210" icon="🛡️" badge="firewall" online={nodes['tsopnsense']?.online} loading={loading} />
+          <FlowNode label={<Link to="/opnsense" className="text-blue-600 dark:text-blue-400 hover:underline">OPNsense</Link>} sub="Protectli V1210" icon="🛡️" badge="firewall" online={nodes['tsopnsense']?.online} loading={loading} />
           <Arrow />
           <FlowNode label="Switch" sub="Netgear MS305E" icon="🔀" />
           <Arrow />
           <FlowNode label="LAN" sub="physical nodes" icon="🖥️" />
         </div>
         <p className="text-xs text-gray-400 dark:text-gray-600 mt-4 leading-relaxed">
-          All physical machines sit on the same LAN behind OPNsense. Internet-bound traffic
+          All physical machines sit on the same LAN behind <Link to="/opnsense" className="text-blue-600 dark:text-blue-400 hover:underline">OPNsense</Link>. Internet-bound traffic
           from the media stack routes exclusively through Gluetun (ProtonVPN WireGuard) on elitedesk —
           nothing else has a direct outbound internet path.
         </p>
@@ -60,7 +62,7 @@ export default function NetworkTopology({ nodes, loading }: Props) {
 }
 
 function FlowNode({ label, sub, icon, badge, dim, online, loading }: {
-  label: string; sub?: string; icon: string; badge?: string; dim?: boolean; online?: boolean; loading?: boolean
+  label: ReactNode; sub?: string; icon: string; badge?: string; dim?: boolean; online?: boolean; loading?: boolean
 }) {
   return (
     <div className={`flex items-center gap-2 px-3 py-2 rounded-lg border ${dim ? 'border-gray-200 dark:border-gray-800 bg-transparent' : 'border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-gray-950'}`}>

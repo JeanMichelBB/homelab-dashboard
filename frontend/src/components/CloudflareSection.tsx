@@ -40,7 +40,7 @@ const PROJECTS = [
 ]
 
 export default function CloudflareSection() {
-  const [selected, setSelected] = useState(PROJECTS.find(p => p.name === 'PopRoom')!)
+  const [selected, setSelected] = useState(PROJECTS.find(p => p.name === 'Apercu')!)
 
   return (
     <div className="space-y-4">

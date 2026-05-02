@@ -6,4 +6,8 @@ frontend/dist/
 backend/__pycache__/
 backend/**/__pycache__/
 backend/.venv/
+backend/venv/
 *.pyc
+.claude/
+.vscode/
+frontend/vite.config.ts.timestamp-*.mjs

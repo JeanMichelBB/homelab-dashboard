@@ -36,7 +36,6 @@ export default function Home({ toggleTheme, dark }: { toggleTheme: () => void; d
     <div className="min-h-screen bg-gray-50 text-gray-900 dark:bg-gray-950 dark:text-gray-100">
       <Header toggleTheme={toggleTheme} dark={dark} />
       <main className="max-w-5xl mx-auto px-6 py-12 space-y-20">
-
         {/* Hero */}
         <Hero nodes={nodes} k3s={k3s} loading={nodesLoading || k3sLoading} />
 
@@ -153,7 +152,7 @@ function A({ href, children }: { href: string; children: ReactNode }) {
   )
 }
 
-function SectionHeader({ number, title, description }: { number: string; title: string; description: string }) {
+function SectionHeader({ number, title, description }: { number: string; title: string; description: ReactNode }) {
   return (
     <div className="mb-8">
       <div className="flex items-baseline gap-3 mb-3">

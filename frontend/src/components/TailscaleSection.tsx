@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom'
 import type { Node } from '../types'
 import { LiveDot } from './Skeleton'
 
@@ -59,7 +60,7 @@ export default function TailscaleSection({ nodes, loading }: Props) {
         </div>
 
         <div className="mt-4 pt-4 border-t border-gray-200 dark:border-gray-800 text-xs text-gray-400 dark:text-gray-600 leading-relaxed">
-          The HomeLab nodes (tselitedesk, tswindows11, tstruenas, OPNsense) also join the same tailnet —
+          The HomeLab nodes (tselitedesk, tswindows11, tstruenas, <Link to="/opnsense" className="text-blue-600 dark:text-blue-400 hover:underline">OPNsense</Link>) also join the same tailnet —
           enabling the remote nodes to reach internal services without any additional configuration.
           All traffic between nodes is encrypted WireGuard point-to-point.
         </div>

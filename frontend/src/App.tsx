@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import Home from './pages/Home'
+import Router from './router'
 
 export default function App() {
   const [dark, setDark] = useState(() => {
@@ -11,5 +11,5 @@ export default function App() {
     localStorage.setItem('theme', dark ? 'dark' : 'light')
   }, [dark])
 
-  return <Home toggleTheme={() => setDark(d => !d)} dark={dark} />
+  return <Router dark={dark} toggleTheme={() => setDark(d => !d)} />
 }
